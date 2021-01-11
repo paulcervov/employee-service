@@ -1,6 +1,7 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
 import {User} from "./entity/User";
+import {Role} from './enums/Role';
 
 createConnection().then(async connection => {
 
@@ -8,7 +9,13 @@ createConnection().then(async connection => {
     const user = new User();
     user.firstName = "Timber";
     user.lastName = "Saw";
-    user.age = 25;
+    user.middleName = "Петрович";
+    user.dateOfBirth = "1990-01-05";
+    user.address = "Улица Пушкина, дом Калатушкина.";
+    user.position = 'Директор по продажам';
+    user.role = Role.Director;
+
+
     await connection.manager.save(user);
     console.log("Saved a new user with id: " + user.id);
 
