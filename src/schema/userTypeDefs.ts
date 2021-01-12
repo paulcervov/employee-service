@@ -1,7 +1,7 @@
 import {gql} from 'apollo-server'
 
-export const typeDefs = gql`
-    
+export default gql`
+
     type Query {
         "Geting list of users"
         findUsers(first: Int = 5, offset: Int): [User]!
