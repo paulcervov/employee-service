@@ -19,12 +19,7 @@ createConnection().then(async connection => {
             middleName: faker.name.middleName(gender),
             dateOfBirth: faker.date.between('1950', '2010')
                 .toISOString().split('T').shift(),
-            address: `
-            ${faker.address.state()},
-            ${faker.address.city()},
-            ${faker.address.streetName()},
-            ${faker.random.number({min: 1, max: 100})}
-            `,
+            address: `${faker.address.state()}, ${faker.address.city()}, ${faker.address.streetAddress()}, ${faker.address.secondaryAddress()}`,
             position: faker.name.jobTitle(),
             role: faker.random.arrayElement(roles)
         });
