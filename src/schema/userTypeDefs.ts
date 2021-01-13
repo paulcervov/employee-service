@@ -15,6 +15,7 @@ export default gql`
         firstName: String!
         middleName: String!
         dateOfBirth: String!
+        phone: String!
         address: String!
         position: String!
         role: Int!
@@ -38,6 +39,8 @@ export default gql`
         firstName: String!
         middleName: String!
         lastName: String!
+        phone: String!
+        password: String!
         dateOfBirth: String!
         address: String!
         position: String!

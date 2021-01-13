@@ -1,20 +1,27 @@
 import {User} from "../entity/User";
 import {getRepository} from "typeorm";
+import {hash} from 'bcrypt';
 
 export default {
     Query: {
-        findUsers: (_, {first, offset}, context, info) => {
+        findUsers: (_, {first, offset}) => {
 
             return getRepository(User).find({
-                take: 10
+                take: first,
+                skip: offset
             });
         },
-        getUser: (_, {id}, context, info) => {
+        getUser: (_, {id}) => {
             return getRepository(User).findOne(id);
         },
     },
     Mutation: {
         createUser: async (_, {input}) => {
+
+            input = {
+                ...input,
+                password: await hash(input.password, 10)
+            }
 
             const user = getRepository(User).create(input);
 
@@ -27,6 +34,11 @@ export default {
             }
         },
         updateUser: async (_, {id, input}) => {
+
+            input = {
+                ...input,
+                password: await hash(input.password, 10)
+            }
 
             const user = await getRepository(User).findOne(id);
 

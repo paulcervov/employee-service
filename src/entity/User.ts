@@ -8,12 +8,6 @@ export class User {
     id: number;
 
     @Column()
-    phone: string;
-
-    @Column()
-    password: string;
-
-    @Column()
     firstName: string;
 
     @Column()
@@ -21,6 +15,15 @@ export class User {
 
     @Column()
     lastName: string;
+
+    @Column({
+        type: "varchar",
+        unique: true,
+    })
+    phone: string;
+
+    @Column()
+    password: string;
 
     @Column('date')
     dateOfBirth: string;
