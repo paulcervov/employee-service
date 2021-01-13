@@ -4,7 +4,7 @@ export default gql`
 
     type Query {
         "Geting list of users"
-        findUsers(first: Int = 5, offset: Int): [User]!
+        findUsers(first: Int = 10, offset: Int = 0): [User]!
         "Geting one user by id"
         getUser(id: ID!): User
     }

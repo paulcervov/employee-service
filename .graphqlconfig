@@ -1,0 +1,6 @@
+{
+  "schemaPath": "src/schema/index.ts",
+  "excludes": [
+    "build/**"
+  ]
+}
