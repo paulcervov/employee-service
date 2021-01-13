@@ -3,7 +3,7 @@ import {createConnection, getRepository, Repository} from "typeorm";
 import {User} from "./entity/User";
 import {Role} from './enums/Role';
 
-createConnection().then(async connection => {
+createConnection().then(async () => {
 
     console.log("Database seeding...");
 
@@ -24,7 +24,7 @@ createConnection().then(async connection => {
         const user: User = userRepository.create({
 
             phone: `+${faker.random.number({min: 1, max: 9})}${faker.unique(faker.phone.phoneNumber)}`,
-            password: '$2b$04$toP1b1dhS0dtpPicQsWjjeOwzl3pvPAfgHDHMT.FXUDy2fuCd4u86', // password,
+            password: '$2b$10$ZlDKwaTWXzQmp2phTYnuG.5OKendphI0O8kjDU/Qdl2rWSrJioNZq', // secret,
 
             lastName: faker.name.lastName(gender),
             firstName: faker.name.firstName(gender),
@@ -42,7 +42,7 @@ createConnection().then(async connection => {
 
     // hardcode for demo access
     userRepository.merge(users[0], {
-        phone: '+1(111)111-11-1',
+        phone: '+1(111)111-11-11',
         position: 'Сотрудник',
         role: Role.Employee
     });
