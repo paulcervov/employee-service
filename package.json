@@ -18,6 +18,7 @@
       "faker": "https://github.com/Marak/faker.js.git#master",
       "graphql": "^15.4.0",
       "jsonwebtoken": "^8.5.1",
+      "lodash": "^4.17.20",
       "pg": "^8.5.1",
       "reflect-metadata": "^0.1.13",
       "typeorm": "0.2.29"
