@@ -4,12 +4,33 @@ import express from "express";
 import {ApolloServer} from "apollo-server-express";
 import typeDefs from "./schema";
 import resolvers from "./resolvers";
-import tokenHandler from "./handlers/tokenHandler";
+import {tokenHandler} from "./handlers";
+import jwt from "express-jwt";
 
 createConnection().then(async () => {
 
     const app = express();
+
     app.use(express.json());
+
+    app.use(jwt({
+        secret: 'secret',
+        algorithms: ['HS256']
+    }).unless({
+        path: [
+            {url: '/token', methods: ['POST']},
+            {url: '/graphql', methods: ['GET']}
+        ]
+    }));
+
+    // Error handling
+    app.use((err, req, res, next) => {
+        if (err.name === 'UnauthorizedError') {
+            res.status(401).send(err);
+        } else {
+            next(err);
+        }
+    });
 
     app.post('/token', tokenHandler);
 

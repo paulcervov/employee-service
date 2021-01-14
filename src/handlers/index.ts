@@ -3,7 +3,7 @@ import {getRepository} from "typeorm";
 import {compare} from 'bcrypt';
 import {sign} from "jsonwebtoken";
 
-export default async ({body}, res) => {
+export const tokenHandler = async ({body}, res) => {
 
     let bodyIsValid: boolean,
         user: User | undefined = undefined,
