@@ -2,6 +2,7 @@ import {User} from "../entity/User";
 import {getRepository} from "typeorm";
 import {compare} from 'bcrypt';
 import {sign} from "jsonwebtoken";
+import {pick} from 'lodash'
 
 export const tokenHandler = async ({body}, res) => {
 
@@ -15,7 +16,7 @@ export const tokenHandler = async ({body}, res) => {
 
     if (bodyIsValid) {
         user = await getRepository(User).findOne({
-            select: ["id", "phone", "password"],
+            select: ["id", "phone", "password", "role"],
             where: {
                 phone: body.phone
             }
@@ -34,12 +35,11 @@ export const tokenHandler = async ({body}, res) => {
         return;
     }
 
+    const payload = await pick(user, ['id', 'role']);
+
     res.status(200).json({
-        token: sign({
-            id: user.id,
-            phone: user.phone
-        }, 'secret', {
-            expiresIn: 60 * 10
+        token: sign(payload, 'secret', {
+            expiresIn: 60 * 60
         }),
     });
 }
