@@ -1,3 +1,3 @@
-import userResolver from "./userResolver";
+import userResolvers from "./userResolvers";
 
-export default [userResolver];
+export default [userResolvers];
