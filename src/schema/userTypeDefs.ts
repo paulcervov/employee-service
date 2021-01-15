@@ -55,6 +55,7 @@ export default gql`
     type UserMutationResponse implements MutationResponse {
         success: Boolean!
         message: String!
-        user: User!
+        errors: [ValidationError!]
+        user: User
     }
 `;

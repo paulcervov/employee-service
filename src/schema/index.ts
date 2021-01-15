@@ -6,6 +6,12 @@ import resolvers from "../resolvers";
 import permissions from "../permissions";
 
 const typeDefs = gql`
+
+    type ValidationError {
+        field: String,
+        messages: [String!]!
+    }
+
     ${userTypeDefs}
 `;
 
