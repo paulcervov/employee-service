@@ -39,7 +39,7 @@ export const tokenHandler = async ({body}, res) => {
 
     res.status(200).json({
         token: sign(payload, 'secret', {
-            expiresIn: 60 * 60
+            expiresIn: "1h"
         }),
     });
 }

@@ -45,7 +45,7 @@ createConnection().then(async () => {
             const payload = await decode(token);
             const user = pick(payload, ['id', 'role'])
 
-            return {auth: {user}};
+            return {user};
         }
     });
 

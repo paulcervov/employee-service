@@ -1,6 +1,7 @@
 import {User} from "../entity/User";
 import {getRepository} from "typeorm";
 import {hash} from 'bcrypt';
+import {Role} from "../enums/Role";
 
 export default {
     Query: {
@@ -16,7 +17,11 @@ export default {
         },
     },
     Mutation: {
-        createUser: async (_, {input}) => {
+        createUser: async (_, {input}, context) => {
+
+            if (![Role.HR, Role.Director].includes(context.user.role)) {
+                throw new Error("Unauthorized action");
+            }
 
             input = {
                 ...input,
@@ -33,7 +38,11 @@ export default {
                 user
             }
         },
-        updateUser: async (_, {id, input}) => {
+        updateUser: async (_, {id, input}, context) => {
+
+            if (![Role.HR, Role.Director].includes(context.user.role)) {
+                throw new Error("Unauthorized action");
+            }
 
             input = {
                 ...input,
@@ -50,7 +59,11 @@ export default {
                 user
             }
         },
-        deleteUser: async (_, {id}) => {
+        deleteUser: async (_, {id}, context) => {
+
+            if (![Role.Director].includes(context.user.role)) {
+                throw new Error("Unauthorized action");
+            }
 
             const user = await getRepository(User).findOne(id);
 
