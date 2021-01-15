@@ -34,6 +34,9 @@ export class User {
     @Column()
     position: string;
 
-    @Column()
+    @Column({
+        type: "enum",
+        enum: Role
+    })
     role: Role;
 }
