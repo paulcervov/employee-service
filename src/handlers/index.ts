@@ -38,7 +38,7 @@ export const tokenHandler = async ({body}, res) => {
     const payload = await pick(user, ['id', 'role']);
 
     res.status(200).json({
-        token: sign(payload, 'secret', {
+        token: sign(payload, process.env.JWT_SECRET, {
             expiresIn: "1h"
         }),
     });

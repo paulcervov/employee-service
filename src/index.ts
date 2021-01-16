@@ -7,15 +7,17 @@ import jwt from "express-jwt";
 import {decode} from "jsonwebtoken";
 import {pick} from 'lodash'
 import schema from './schema'
+import {config} from 'dotenv';
+
+config();
+
 
 createConnection().then(async () => {
 
     const app = express();
-
     app.use(express.json());
-
     app.use(jwt({
-        secret: 'secret',
+        secret: process.env.JWT_SECRET,
         algorithms: ['HS256']
     }).unless({
         path: [
