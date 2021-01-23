@@ -5,7 +5,8 @@ import {ApolloServer} from "apollo-server-express";
 import {tokenHandler} from "./handlers";
 import {decode} from "jsonwebtoken";
 import {pick} from 'lodash'
-import schema from './schema'
+import typeDefs from "./typeDefs";
+import resolvers from "./resolvers";
 
 import {errorHandlingMiddleware, jwtValidationMiddleware} from './middlewares'
 
@@ -21,7 +22,8 @@ async function bootstrap() {
     app.post('/token', tokenHandler);
 
     const server = new ApolloServer({
-        schema,
+        typeDefs,
+        resolvers,
         context: async ({req}) => {
 
             const token = req.headers.authorization.split(' ')[1];
@@ -29,7 +31,7 @@ async function bootstrap() {
             const user = pick(payload, ['id', 'role'])
 
             return {
-                user,
+                auth: {user},
                 connection,
             };
         }

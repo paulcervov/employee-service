@@ -1,5 +1,5 @@
 {
-  "schemaPath": "src/schema/index.ts",
+  "schemaPath": "src/typeDefs/index.ts",
   "excludes": [
     "build/**"
   ]

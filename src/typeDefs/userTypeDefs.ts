@@ -4,9 +4,9 @@ export default gql`
 
     type Query {
         "Geting list of users"
-        findUsers(first: Int = 10, offset: Int = 0): [User]!
+        findUsers(first: Int = 10, offset: Int = 0): findUsersQueryResponse!
         "Geting one user by id"
-        getUser(id: ID!): User
+        getUser(id: ID!): GetUserQueryResponse!
     }
 
     type User {
@@ -19,6 +19,18 @@ export default gql`
         address: String!
         position: String!
         role: Int!
+    }
+
+    type findUsersQueryResponse implements Response {
+        success: Boolean!
+        message: String
+        users: [User]!
+    }
+
+    type GetUserQueryResponse implements Response {
+        success: Boolean!
+        message: String
+        user: User
     }
 
     type Mutation {
@@ -47,15 +59,10 @@ export default gql`
         role: Int!
     }
 
-    interface MutationResponse {
+    type UserMutationResponse implements Response {
         success: Boolean!
         message: String!
-    }
-
-    type UserMutationResponse implements MutationResponse {
-        success: Boolean!
-        message: String!
-        errors: [ValidationError!]
+        validationErrors: [ValidationError!]
         user: User
     }
 `;

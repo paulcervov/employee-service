@@ -1,23 +1,37 @@
 import {User} from "../entity/User";
 import {hash} from 'bcrypt';
 import {validate} from 'class-validator';
+import {Role} from '../enums/Role';
 
 export default {
     Query: {
-        findUsers: (_, {first, offset}, {connection}) => {
+        findUsers: async (_, {first, offset}, {connection}) => {
 
-            return connection.getRepository(User).find({
-                take: first,
-                skip: offset
-            });
+            return {
+                success: true,
+                users: connection.getRepository(User).find({
+                    take: first,
+                    skip: offset
+                })
+            };
         },
-        getUser: (_, {id}, {connection}) => {
+        getUser: async (_, {id}, {connection}) => {
 
-            return connection.getRepository(User).findOne(id);
+            return {
+                success: true,
+                user: await connection.getRepository(User).findOne(id)
+            };
         },
     },
     Mutation: {
-        createUser: async (_, {input}, {connection}) => {
+        createUser: async (_, {input}, {connection, auth}) => {
+
+            if (auth.user.role === Role.Employee) {
+                return {
+                    success: false,
+                    message: 'Нет прав',
+                }
+            }
 
             input = {
                 ...input,
@@ -26,13 +40,16 @@ export default {
 
             const user = connection.getRepository(User).create(input);
 
-            const errors = await validate(user, {validationError: {target: false, value: false}});
+            const validationErrors = await validate(user, {validationError: {target: false, value: false}});
 
-            if (errors.length > 0) {
+            if (validationErrors.length > 0) {
                 return {
                     success: false,
                     message: 'Данные неверны',
-                    errors: errors.map(error => ({field: error.property, messages: Object.values(error.constraints)})),
+                    validationErrors: validationErrors.map(error => ({
+                        field: error.property,
+                        messages: Object.values(error.constraints)
+                    })),
                 }
             }
 
@@ -44,7 +61,14 @@ export default {
                 user
             }
         },
-        updateUser: async (_, {id, input}, {connection}) => {
+        updateUser: async (_, {id, input}, {connection, auth}) => {
+
+            if (auth.user.role === Role.Employee) {
+                return {
+                    success: false,
+                    message: 'Нет прав',
+                }
+            }
 
             input = {
                 ...input,
@@ -60,13 +84,16 @@ export default {
                 }
             }
 
-            const errors = await validate(user, {validationError: {target: false, value: false}});
+            const validationErrors = await validate(user, {validationError: {target: false, value: false}});
 
-            if (errors.length > 0) {
+            if (validationErrors.length > 0) {
                 return {
                     success: false,
                     message: 'Данные неверны',
-                    errors: errors.map(error => ({field: error.property, messages: Object.values(error.constraints)})),
+                    validationErrors: validationErrors.map(error => ({
+                        field: error.property,
+                        messages: Object.values(error.constraints)
+                    })),
                 }
             }
 
@@ -78,7 +105,14 @@ export default {
                 user
             }
         },
-        deleteUser: async (_, {id}, {connection}) => {
+        deleteUser: async (_, {id}, {connection, auth}) => {
+
+            if (auth.user.role !== Role.Director) {
+                return {
+                    success: false,
+                    message: 'Нет прав',
+                }
+            }
 
             const user = await connection.getRepository(User).findOne(id);
 
@@ -98,9 +132,4 @@ export default {
             }
         },
     },
-    MutationResponse: {
-        __resolveType() {
-            return null;
-        }
-    }
 }

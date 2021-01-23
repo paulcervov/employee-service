@@ -1,3 +1,11 @@
 import userResolvers from "./userResolvers";
 
-export default [userResolvers];
+const ResponseResolver = {
+    Response: {
+        __resolveType() {
+            return null;
+        }
+    }
+}
+
+export default [userResolvers, ResponseResolver];

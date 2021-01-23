@@ -19,8 +19,6 @@
       "express-jwt": "^6.0.0",
       "faker": "https://github.com/Marak/faker.js.git#master",
       "graphql": "^15.4.0",
-      "graphql-middleware": "^6.0.1",
-      "graphql-shield": "^7.5.0",
       "jsonwebtoken": "^8.5.1",
       "lodash": "^4.17.20",
       "pg": "^8.5.1",
