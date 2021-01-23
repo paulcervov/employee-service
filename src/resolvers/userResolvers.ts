@@ -1,31 +1,30 @@
 import {User} from "../entity/User";
-import {getRepository} from "typeorm";
 import {hash} from 'bcrypt';
 import {validate} from 'class-validator';
 
 export default {
     Query: {
-        findUsers: (_, {first, offset}) => {
+        findUsers: (_, {first, offset}, {connection}) => {
 
-            return getRepository(User).find({
+            return connection.getRepository(User).find({
                 take: first,
                 skip: offset
             });
         },
-        getUser: (_, {id}) => {
+        getUser: (_, {id}, {connection}) => {
 
-            return getRepository(User).findOne(id);
+            return connection.getRepository(User).findOne(id);
         },
     },
     Mutation: {
-        createUser: async (_, {input}) => {
+        createUser: async (_, {input}, {connection}) => {
 
             input = {
                 ...input,
                 password: await hash(input.password, 10)
             }
 
-            const user = getRepository(User).create(input);
+            const user = connection.getRepository(User).create(input);
 
             const errors = await validate(user, {validationError: {target: false, value: false}});
 
@@ -37,7 +36,7 @@ export default {
                 }
             }
 
-            await getRepository(User).save(user);
+            await connection.getRepository(User).save(user);
 
             return {
                 success: true,
@@ -45,14 +44,14 @@ export default {
                 user
             }
         },
-        updateUser: async (_, {id, input}) => {
+        updateUser: async (_, {id, input}, {connection}) => {
 
             input = {
                 ...input,
                 password: await hash(input.password, 10)
             }
 
-            const user = await getRepository(User).findOne(id);
+            const user = await connection.getRepository(User).findOne(id);
 
             if (user === undefined) {
                 return {
@@ -71,7 +70,7 @@ export default {
                 }
             }
 
-            await getRepository(User).update(id, input);
+            await connection.getRepository(User).update(id, input);
 
             return {
                 success: true,
@@ -79,9 +78,9 @@ export default {
                 user
             }
         },
-        deleteUser: async (_, {id}) => {
+        deleteUser: async (_, {id}, {connection}) => {
 
-            const user = await getRepository(User).findOne(id);
+            const user = await connection.getRepository(User).findOne(id);
 
             if (user === undefined) {
                 return {
@@ -90,7 +89,7 @@ export default {
                 }
             }
 
-            await getRepository(User).delete(id);
+            await connection.getRepository(User).delete(id);
 
             return {
                 success: true,
